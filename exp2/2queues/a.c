@@ -49,62 +49,55 @@ int main(){
     char buf[4];
 	while(1){
 		if(pid != 0){/*主进程*/
-            fa = fopen("./end.txt", "r");
-            fgets(buf, 4, fa);
-            fclose(fa);
-            printf("%s\n", buf);
-            if(strncmp(buf, "end", 3) == 0) {
-                break;
-            }
+               
+            	fa = fopen("./end.txt", "r");
+            	fgets(buf, 4, fa);
+            	fclose(fa);
+            	// printf("%s\n", buf);
+            	if(strncmp(buf, "end", 3) == 0) {
+                	break;
+            	}
             
-            //pp = wait(&status);
-            si = WEXITSTATUS(status);
-               printf("pp\n");
+            
+          si = WEXITSTATUS(status);
+               
             if(si == 5) {
-                printf("A Exit\n");
+                
                 break;
             }
             
 
 		    msg_sflags = IPC_NOWAIT;/*当消息队列满了的时候不等待*/
 		    msg_mbuf.mtype = 10;/*设置发送的消息类型*/
-            // msg_mbuf.mtype = 0; // 
+            
 		    sleep(1);
-		    // char *content;
-		    // content = (char*)malloc(10*sizeof(char));
-            printf("\nA Send: ");
-		    //scanf("%s",content);/*用户输入内容*/
+		    
+            printf("input: ");
             fgets(buffer, BUFSIZ, stdin);
             strcpy(msg_mbuf.mtext, buffer);
-            //printf("A: ");
-
 		    //if(strncmp(buffer,"end",3) == 0)/*如果前三个字符为end，则跳出循环*/
             //	break;
-	
-		    // memcpy(msg_mbuf.mtext,content,10);/*复制字符串*/
-		    ret = msgsnd(smsg_id, &msg_mbuf, MAX_TEXT, msg_sflags);/*发送消息*/
-		    if( -1 == ret){
+		
+	ret = msgsnd(smsg_id, &msg_mbuf, MAX_TEXT, msg_sflags);/*发送消息*/
+	printf("\033[1;37;43m A Send:\033[0m \033[1;33m %s\033[0m\n", msg_mbuf.mtext);
+		    if( -1 == ret && si != 5){
+                		return 0;// B destroy the queue 
 			    printf("A 发送消息失败\n");		
 		    }
+
+            if(strncmp(buffer, "end", 3) == 0) {
+                fa = fopen("./end.txt", "w");
+                fputs("end", fa);
+                fclose(fa);
+                break;
+               }
+
             fp = fopen("./log.txt","a");
             fputs("A: ", fp);
             fputs(buffer, fp);
-            // fputs("\n", fp);
+       
             fclose(fp);
             
-            fa = fopen("./end.txt", "r");
-            fgets(buf, 4 , fa);
-            fclose(fa);
-            printf("%s\n", buf);
-            if(strncmp(buf, "end", 3) == 0) {
-                break;
-            }
-               /*
-            if(strncmp(buffer, "end", 3) == 0) {
-                printf("\nA EXIT\n");
-                break;
-            }
-            */
         } else {/*子进程*/
 			sleep(1);
 			// msg_mbuf.mtype = 10;/*设置收消息的类型*/
@@ -112,15 +105,17 @@ int main(){
 			msg_rflags = IPC_NOWAIT;//|MSG_NOERROR;
 			ret = msgrcv(rmsg_id, &msg_mbuf,MAX_TEXT,10,msg_rflags);/*接收消息*/
 			if( -1 == ret) {
-                printf("exit\n");
+               
 				/*可添加出错处理等*/
 			} else {
-                if(strncmp(msg_mbuf.mtext, "end", 3) == 0)
-                exit(5);
-				// printf("A 接收消息成功，长度：%d\n",ret);	
-                printf("\nA Recieve : %s",msg_mbuf.mtext);
-                // sleep(5);
-                // printf("A: ");
+                 if(strncmp(msg_mbuf.mtext, "end", 3) == 0) {
+                    printf("B Exit; A Exit\n");
+                    exit(5);
+                    }
+               
+				
+printf("\n\033[1;37;46m A Receive :\033[0m \033[1;32m%s\033[0m\n",msg_mbuf.mtext);	
+                
 			}
 
         // printf("A: ");
@@ -128,7 +123,9 @@ int main(){
 	}
     
     
-    
+    if(si == 5) {
+        return 0;
+    }
 	ret = msgctl(rmsg_id, IPC_RMID,NULL);/*删除收消息的队列*/
 	if(-1 == ret)
 	{
