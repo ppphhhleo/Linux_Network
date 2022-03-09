@@ -91,6 +91,7 @@ printf("\033[1;37;43m B Send:\033[0m \033[1;33m %s\033[0m\n", msg_mbuf.mtext);
 			{
                 if(strncmp(msg_mbuf.mtext, "end", 3) == 0) {
                     printf("Another process has been exit, enter to exit\n");
+                    exit(5);
                 }
       
 				// printf("接收消息成功，长度：%d\n",ret);

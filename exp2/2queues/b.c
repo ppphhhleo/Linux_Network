@@ -82,7 +82,7 @@ int main(){
 		    
 		  
 		    ret = msgsnd(smsg_id, &msg_mbuf, MAX_TEXT, msg_sflags);/*发送消息*/
-printf("\033[1;37;43m B Send:\033[0m \033[1;33m %s\033[0m\n", msg_mbuf.mtext);
+
 		    if( -1 == ret && si != 5){
                 return 0;
 			    printf("B 发送消息失败\n");		
@@ -94,7 +94,7 @@ printf("\033[1;37;43m B Send:\033[0m \033[1;33m %s\033[0m\n", msg_mbuf.mtext);
                 fclose(fa);
 			    break;
             }
-	
+	printf("\033[1;37;43m B Send:\033[0m \033[1;33m %s\033[0m\n", msg_mbuf.mtext);
             fp = fopen("./log.txt", "a");
             fputs("B: ", fp);
             fputs(buffer, fp);
@@ -112,7 +112,7 @@ printf("\033[1;37;43m B Send:\033[0m \033[1;33m %s\033[0m\n", msg_mbuf.mtext);
 				    /*可添加出错处理等*/
 			    } else {
                     if(strncmp(msg_mbuf.mtext, "end", 3) == 0) {
-                        printf("A Exit; B Exit\n");
+                        printf("\n \033[1;37;41m Another process has Exited; Enter to Exit\033[0m \n");
                         exit(5);
                     }
                 

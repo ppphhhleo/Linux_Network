@@ -1,0 +1,18 @@
+A: a
+B: b
+A: aaaaaaaaaaaaaa
+B: aaaaaaaaaaaaa
+A: aaaaaaaaaaaaaaaaaaaaa
+B: aaaaaaaaaaaaaaaa
+B: 
+B: eend
+B: hello this is B
+A: hello this is A
+B: Goodbye
+A: Bye~
+B: Hello, this is from B
+A: Hi,I'm A
+B: Nice
+A: enchante
+B: See U~
+A: Bye

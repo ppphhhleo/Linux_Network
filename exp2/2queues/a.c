@@ -79,7 +79,7 @@ int main(){
             //	break;
 		
 	ret = msgsnd(smsg_id, &msg_mbuf, MAX_TEXT, msg_sflags);/*发送消息*/
-	printf("\033[1;37;43m A Send:\033[0m \033[1;33m %s\033[0m\n", msg_mbuf.mtext);
+	
 		    if( -1 == ret && si != 5){
                 		return 0;// B destroy the queue 
 			    printf("A 发送消息失败\n");		
@@ -91,7 +91,7 @@ int main(){
                 fclose(fa);
                 break;
                }
-
+printf("\033[1;37;43m A Send:\033[0m \033[1;33m %s\033[0m\n", msg_mbuf.mtext);
             fp = fopen("./log.txt","a");
             fputs("A: ", fp);
             fputs(buffer, fp);
@@ -109,7 +109,7 @@ int main(){
 				/*可添加出错处理等*/
 			} else {
                  if(strncmp(msg_mbuf.mtext, "end", 3) == 0) {
-                    printf("B Exit; A Exit\n");
+                    printf("\n \033[1;37;41m Another process has Exited; Enter to Exit\033[0m \n");
                     exit(5);
                     }
                
