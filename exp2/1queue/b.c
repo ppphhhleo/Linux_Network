@@ -12,6 +12,7 @@
 #include <sys/msg.h>
 #include <unistd.h>
 #include <sys/ipc.h>
+#include<signal.h>
 #define MAX_TEXT 512
 int main(){
       
@@ -54,29 +55,22 @@ int main(){
       
 		if(pid != 0){
       /*主进程*/
-		msg_sflags = IPC_NOWAIT;
-		msg_mbuf.mtype = 11;/*发送消息的类型为10，另一个进程收消息的类型应为10*/
-		sleep(1);
-		// char *content;
-		// content = (char*)malloc(10*sizeof(char));
-		printf("input: ");
-        fgets(buffer, BUFSIZ, stdin);
-        strcpy(msg_mbuf.mtext, buffer);
-	ret = msgsnd(msg_id, &msg_mbuf, 11, msg_sflags);/*发送消息*/
-		// scanf("%s",content);/*用户输入内容*/
-		if(strncmp(buffer,"end",3) == 0)/*如果前三个字符为end，则跳出循环*/
-			break;
-	//printf("B Send: %s\n", msg_mbuf.mtext);
-printf("\033[1;37;43m B Send:\033[0m \033[1;33m %s\033[0m\n", msg_mbuf.mtext);
-		// memcpy(msg_mbuf.mtext,content,10);/*复制字符串*/
+			msg_sflags = IPC_NOWAIT;
+			msg_mbuf.mtype = 11;/*发送消息的类型为10，另一个进程收消息的类型应为10*/
+			sleep(1);
+			printf("input: ");
+        	fgets(buffer, BUFSIZ, stdin);
+        	strcpy(msg_mbuf.mtext, buffer);
+			ret = msgsnd(msg_id, &msg_mbuf, 11, msg_sflags);/*发送消息*/
 		
-		if( -1 == ret)
-		{
-            return 0;
-			printf("发送消息失败\n");		
-		}
-		}
-		else{
+			if(strncmp(buffer,"end",3) == 0)/*如果前三个字符为end，则跳出循环*/
+				break;
+			printf("\033[1;37;43m B Send:\033[0m \033[1;33m %s\033[0m\n", msg_mbuf.mtext);	
+			if( -1 == ret) {
+            	return 0;
+				printf("发送消息失败\n");		
+			}
+		} else {
       /*子进程*/
 			sleep(1);
 			msg_mbuf.mtype = 10;/*收消息的类型为11，另一个进程发消息的类型应为11*/
@@ -90,13 +84,13 @@ printf("\033[1;37;43m B Send:\033[0m \033[1;33m %s\033[0m\n", msg_mbuf.mtext);
 			else
 			{
                 if(strncmp(msg_mbuf.mtext, "end", 3) == 0) {
-                    printf("Another process has been exit, enter to exit\n");
-                    exit(5);
+			
+                    printf("\n\033[1;37;41m Another process has been exit, Exit\033[0m\n");
+					kill(pid, SIGKILL);
+		    
                 }
-      
-				// printf("接收消息成功，长度：%d\n",ret);
-printf("\n\033[1;37;46m B Receive :\033[0m \033[1;32m%s\033[0m\n",msg_mbuf.mtext);		
-				//printf("content:%s\n",msg_mbuf.mtext);	
+
+				printf("\n\033[1;37;46m B Receive :\033[0m \033[1;32m%s\033[0m\n",msg_mbuf.mtext);			
 			}
 		
 		}
@@ -106,9 +100,7 @@ printf("\n\033[1;37;46m B Receive :\033[0m \033[1;32m%s\033[0m\n",msg_mbuf.mtext
 	ret = msgctl(msg_id, IPC_RMID,NULL);/*删除消息队列*/
 	if(-1 == ret)
 	{
-        return 0;
-		// printf("删除消息失败\n");
-		// return 0;		
+        return 0;	
 	}
 	return 0;
 }
