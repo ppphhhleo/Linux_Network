@@ -1,0 +1,12 @@
+
+Received: This is a text!
+Reply: 17 bytes altogether
+
+Received: Another text
+Reply: 14 bytes altogether
+
+Received: Next text
+Reply: 11 bytes altogether
+
+Received: Here is a poem:
+Reply: 17 bytes altogether
