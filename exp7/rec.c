@@ -1,6 +1,6 @@
 /*************************************************************************
 	> File Name: rec.c
-	> Author: 
+	> Author: ph
 	> Mail: 
 	> Created Time: Mon 16 May 2022 08:03:16 AM PDT
  ************************************************************************/
@@ -83,14 +83,17 @@ int main(int argc,char *argv[]){
        //signal(SIGINT, notice);
         memset(buf, 0, sizeof(buf));
         length=recvfrom(socked, buf, sizeof(buf), 0, (struct sockaddr*)&sender,&sender_len);
-	if(strlen(buf) == 0) {printf("\033[1;37;44m DONE \033[0m \n "); break;}
-	fa = fopen("./receive.txt", "a");
+	    if(strlen(buf) == 0) {
+            printf("\033[1;37;44m DONE \033[0m \n "); 
+            break;
+        }
+	    fa = fopen("./receive.txt", "a");
         fprintf(fa, "\nReceived: ");
         fprintf(fa, buf);
-	fprintf(fa, "\n%d bytes altogether\n", strlen(buf));
-	fclose(fa);
+	    fprintf(fa, "\n%d bytes altogether\n", strlen(buf));
+	    fclose(fa);
         //printf("\033[1;37;43m %s %d \033[0m: \033[1;37;40m%s \033[0m\n",inet_ntoa(sender.sin_addr), ntohs(sender.sin_port), buf);
-printf("\033[1;37;43m Received From %s: \033[0m \033[1;37;40m%s \033[0m\n",inet_ntoa(sender.sin_addr),  buf);
+        printf("\033[1;37;43m Received From %s: \033[0m \033[1;37;40m%s \033[0m\n",inet_ntoa(sender.sin_addr),  buf);
     }
 
     setsockopt(socked, IPPROTO_IP, IP_DROP_MEMBERSHIP,&mreq, sizeof(mreq));
