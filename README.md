@@ -92,3 +92,9 @@ Linux 网络程序设计。
 * 注意测试环境：**Ubuntu 18.04，内核版本：linux-headers-5.4.0-117-generic**
 * 执行init.sh 脚本，注意初次运行无需去除内核模块；之后再次编译之前，需要去除内核模块。
 * 查看Makefile，编辑生成的可执行程序名
+
+
+## TIPS：
+首先将图片合集文件夹上传，  
+其次，修改md文件内图片目录连接，保留图片名：
+> https://github.com/ppphhhleo/Linux_Network/blob/main/pics/media/
